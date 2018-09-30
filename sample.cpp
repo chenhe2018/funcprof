@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     int i=0;
     while (1) {
         PROF_NF_BEGIN("::funcA");
-        a.funcA(10);
+        //a.funcA(10);
         printf("%d\n",i++);
         PROF_NF_END("::funcA");
     }

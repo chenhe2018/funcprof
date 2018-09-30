@@ -157,7 +157,7 @@ void __profile_entry_func(const char *name_ptr) {
         }
         prof_ptr = (prof_t **) malloc(sizeof(prof_t *));
         *prof_ptr = (prof_t *) (_shm_ptr) + i * PROF_MAX_FUNC;
-        (*prof_ptr)[0].prof_size = 0;
+        ((*prof_ptr)[0]).prof_size = 0;
         pthread_setspecific(slot_key, (void *) prof_ptr);
 
         clock_stack = (uint64_t *) malloc(sizeof(uint64_t) * PROF_MAX_DEEP);
@@ -208,7 +208,7 @@ void __profile_exit_func(const char *name_ptr) {
 
     if (prof_entity == NULL) {
         hash_entry->name_ptr = name_ptr;
-        hash_entry->index = ++prof[0].prof_size;
+        hash_entry->index = ++(prof[0]).prof_size;
         hash_entry->next = NULL;
         prof_entity = &prof[hash_entry->index];
         (prof_entity->prof_body).begin = 0;
