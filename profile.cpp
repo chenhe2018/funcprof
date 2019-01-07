@@ -142,9 +142,9 @@ void __profile_entry_func(const char *name_ptr) {
 
     clock_stack = (uint64_t *) pthread_getspecific(clock_stack_key);
     if (clock_stack == NULL) {
-        int i;
+        int i = 0;
         pthread_mutex_lock(&slot_mutex);
-        for (int i = 0; i < PROF_MAX_THREADS; i++) {
+        for (;i < PROF_MAX_THREADS; i++) {
             if (!slot[i]) {
                 slot[i] = 1;
                 break;
@@ -162,7 +162,7 @@ void __profile_entry_func(const char *name_ptr) {
 
         clock_stack = (uint64_t *) malloc(sizeof(uint64_t) * PROF_MAX_DEEP);
         clock_stack[0] = 1;
-        pthread_setspecific(slot_key, (void *) clock_stack);
+        pthread_setspecific(clock_stack_key, (void *) clock_stack);
 
         hash_table = (hash_t *) malloc(sizeof(hash_t) * PROF_MAX_FUNC);
         memset(hash_table, 0x00, sizeof(hash_t) * PROF_MAX_FUNC);

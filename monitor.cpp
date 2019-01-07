@@ -45,10 +45,10 @@ struct hash_t {
 } hash_table[PROF_MAX_FUNC];
 
 char head_txt[6][64] = {"rank", "function", "exec", "call", "average", "rate"};
-char *head_fmt = "\033[33;49;1m%4.4s %-47.47s %16.16s%4.4s %12.12s %16.16s%4.4s %8.8s\033[31;49;0m\n";
-char *prof_fmt = "\033[33;49;1m%4d %-47.47s %20lld %20lld %20.2f %7.2f%%\033[31;49;0m\n";
-char *head_fmt_none = "%4.4s %-47.47s %16.16s%4.4s %12.12s %16.16s%4.4s %8.8s\n";
-char *prof_fmt_none = "%4d %-47.47s %20lld %20lld %20.2f %7.2f%%\n";
+char head_fmt[] = "\033[33;49;1m%4.4s %-47.47s %16.16s%4.4s %12.12s %16.16s%4.4s %8.8s\033[31;49;0m\n";
+char prof_fmt[] = "\033[33;49;1m%4d %-47.47s %20lld %20lld %20.2f %7.2f%%\033[31;49;0m\n";
+char head_fmt_none[] = "%4.4s %-47.47s %16.16s%4.4s %12.12s %16.16s%4.4s %8.8s\n";
+char prof_fmt_none[] = "%4d %-47.47s %20lld %12lld %20.2f %7.2f%%\n";
 
 bool (*cmp)(prof_t, prof_t);
 
@@ -114,6 +114,7 @@ int initialize() {
     }
     _shm_id = shmget(_shm_key, 0, 0);
     if (_shm_id == -1) {
+        printf("shmget() %s %ld", path_name, _shm_key);
         ERROR("shmget()");
         return -1;
     }
@@ -137,7 +138,7 @@ int finalize(void) {
     if (logfp != NULL) {
         double total_exec_time = 0.0;
         const char *prec = g_time_base == 1 ? "(ns)" : (g_time_base == 1000 ? "(us)" : "(ms)");
-        fprintf(logfp, head_fmt_none, head_txt[0], head_txt[1], head_txt[2], prec, head_txt[3], head_txt[4],
+        fprintf(logfp, head_fmt_none, head_txt[0], head_txt[1], head_txt[2], prec, head_txt[3], head_txt[4], prec,
                 head_txt[5]);
         sort(prof_list, prof_list + prof_list_size, cmp);
         for (int i = 0; i < prof_list_size; ++i) {
